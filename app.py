@@ -88,6 +88,7 @@ class Welcome(BaseHandler):
         else:
             self.redirect('/unit2/signup')
 
-
-
-app = webapp2.WSGIApplication([('/', MainPage),], debug=True)
+app = webapp2.WSGIApplication([('/unit2/rot13', Rot13),
+                               ('/unit2/signup', Signup),
+                               ('/unit2/welcome', Welcome)],
+                              debug=True)
