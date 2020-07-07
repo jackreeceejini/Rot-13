@@ -14,16 +14,23 @@ def render_str(template, **params):
         t = jinja_env.get_template(template)
         return t.render(params)
 
-class Handler(webapp2.RequestHandler):
+class BaseHandler(webapp2.RequestHandler):
+    def render(self, template, **kw):
+        self.response.out.write(render_str(template, **kw))
+
     def write(self, *a, **kw):
         self.response.out.write(*a, **kw)
-    
-    def render(self, template, **kw):
-        self.write(self.render_str(template, **kw))
 
-class MainPage(Handler):
+class Rot13(BaseHandler):
     def get(self):
-        items = self.request.get_all("food")
-        self.render("shopping_list.html", items = items)
+        self.render('rot13-form.html')
+    
+    def post(self):
+        rot13 = ''
+        text = self.request.get('text')
+        if text:
+            rot13 = text.encode('rot13')
+
+        self.render('rot13-form.html', text = rot13)
         
 app = webapp2.WSGIApplication([('/', MainPage),], debug=True)
